@@ -1,12 +1,10 @@
 import React from 'react';
-import { Comment } from 'antd';
+import { Comment, Tag } from 'antd';
 import 'antd/dist/antd.css';
 
 function StoryComment({key, data}){
     const [ showComments, setShowComments] = React.useState(false);
     const [ nestedComments, setNestedComments ] = React.useState([]);
-
-    console.log(data);
 
     React.useEffect(() => {
       fetchNestedComments();
@@ -28,10 +26,22 @@ function StoryComment({key, data}){
         }
     }
 
+    const formatCommentText = (text) => {
+        const slash = "&#x2F;";
+        const comma = "&#x27;";
+        if (text.includes(slash)) {
+            text = text.replaceAll(slash, "/");
+        }
+        if (text.includes(comma)) {
+            text = text.replaceAll(comma, "'");
+        }
+        return text;
+    };
+
     return (
         <Comment
           author={data.by}
-          content={data.text}
+          content={ formatCommentText(data.text) }
           datetime={new Date(data.time * 1000).toLocaleString()}
           style={{
             paddingLeft: 24, 
